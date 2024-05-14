@@ -7,38 +7,40 @@ public class Parkhaus {
 	public static void main(String[] args) {
         System.out.println("Parkzeitberechnung");
 		
+        //tut einfahrt und Ausfahrt einlesen
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("\nEinfahrt (hh:mm): ");
 		String einfahrt = scanner.nextLine();
 		
 		System.out.print("Ausfahrt (hh:mm): ");
 		String ausfahrt = scanner.nextLine();
-		
-		int parkdauer = berechneZuZahlendeParkdauer(einfahrt, ausfahrt);
-		float parkgebühren = berechneParkgebuehr(parkdauer);
-		float parkgebühreneuro = parkgebühren / 100 ;
-		
-		String parkstring = String.format("%.2f", parkgebühreneuro);
 
-		String[] teile = parkstring.split("\\,");
 		
-		if (istEingabeGueltig(einfahrt, ausfahrt) || parkdauer != -1) {
+		if (istEingabeGueltig(einfahrt, ausfahrt)) {
+			int parkdauer = berechneZuZahlendeParkdauer(einfahrt, ausfahrt);
+			
 			if (parkdauer == 0) {
 				System.out.println("Keine Gebühr erforderlich!");
 			} else {
+				float parkgebühren = berechneParkgebuehr(parkdauer);
+				float parkgebührenInEuro = parkgebühren / 100 ;
+				String parkstring = String.format("%.2f", parkgebührenInEuro);
+
+				String[] teile = parkstring.split("\\,");
 				System.out.println("\nParkgebühr: " + teile[0] + " Euro und " + teile[1] + " Cent.");
 				System.out.print("Zahlung (€€,cc): ");
 				String zahlung = scanner.nextLine();
-				int zahlungcent = zahlungGueltig(zahlung);
-				int rueckgeld = zahlungcent - (int)parkgebühren;
-				int[] rueckgeldarray = rueckgeld(rueckgeld);
-				if (zahlungcent != -1) {
-					if (zahlungcent - parkgebühren >= 0) {
-						for (int i = 0; i < rueckgeldarray.length; i++) {
-							String[] ausgabenarray = {"\nRueckgeld\n2 Euro: ", "1 Euro: ", "50 Cent: ", "20 Cent: ", "10 Cent: "};
-							System.out.println(ausgabenarray[i] + rueckgeldarray[i]);
+				int zahlungInCent = zahlungGueltig(zahlung);
+				int rueckgeld = zahlungInCent - (int)parkgebühren;
+				int[] rueckgeldArray = rueckgeld(rueckgeld);
+				if (zahlungInCent != -1) {
+					if (zahlungInCent - parkgebühren >= 0) {
+						for (int i = 0; i < rueckgeldArray.length; i++) {
+							String[] ausgabenArray = {"\nRueckgeld\n2 Euro: ", "1 Euro: ", "50 Cent: ", "20 Cent: ", "10 Cent: "};
+							System.out.println(ausgabenArray[i] + rueckgeldArray[i]);
 						}
 						} else {
+							
 						System.out.print("\nDu Geizhals steckst jetzt fest!");
 						}
 				} else {
@@ -63,26 +65,26 @@ public class Parkhaus {
         // Erstelle ein Pattern-Objekt
         Pattern p = Pattern.compile(pattern);
         
-        // Erstelle ein Matcher-Objekt
+        // Erstellt Matcher-Objekt
         Matcher m = p.matcher(einfahrt);
         Matcher n = p.matcher(ausfahrt);
 		
 		if (m.matches() && n.matches()) {
 		
-	        String[] einfahrtzeitstücke = einfahrt.split(":");
-	        String[] ausfahrtzeitstücke = ausfahrt.split(":");
+	        String[] einfahrtszeitStücke = einfahrt.split(":");
+	        String[] ausfahrtszeitStücke = ausfahrt.split(":");
 	        
-	        int einfahrtstunden = Integer.parseInt(einfahrtzeitstücke[0]);
-	        int einfahrtminuten = Integer.parseInt(einfahrtzeitstücke[1]);
-	        int ausfahrtstunden = Integer.parseInt(ausfahrtzeitstücke[0]);
-	        int ausfahrtminuten = Integer.parseInt(ausfahrtzeitstücke[1]);
+	        int einfahrtstunden = Integer.parseInt(einfahrtszeitStücke[0]);
+	        int einfahrtminuten = Integer.parseInt(einfahrtszeitStücke[1]);
+	        int ausfahrtstunden = Integer.parseInt(ausfahrtszeitStücke[0]);
+	        int ausfahrtminuten = Integer.parseInt(ausfahrtszeitStücke[1]);
         
 	        if (einfahrtstunden > ausfahrtstunden || (einfahrtstunden == ausfahrtstunden && einfahrtminuten >= ausfahrtminuten)) {
 	        	return false;
 	        }
 	        
 	        if (einfahrtstunden == 22 || ausfahrtstunden == 22) {
-	        	return (einfahrtstunden >= 6 && einfahrtstunden <= 22) && (einfahrtminuten == 0) && 
+	        	return (einfahrtstunden >= 6 && einfahrtstunden <= 22) && (einfahrtminuten < 60) && 
 	             	   (ausfahrtstunden >= 6 && ausfahrtstunden <= 22) && (ausfahrtminuten == 0);
 	        }
         
@@ -104,7 +106,7 @@ public class Parkhaus {
 		// Parkdauer null Minuten beträgt
 		// oder die gesamte Parkzeit innerhalb der gebührenfreien Zeitspannen liegt,
 		// fallen keine Gebühren an und somit beträgt die parkdauer = 0.
-		if (istEingabeGueltig(einfahrt, ausfahrt)) {
+		
 			String[] einfahrtzeitstücke = einfahrt.split(":");
 	        String[] ausfahrtzeitstücke = ausfahrt.split(":");
 	        
@@ -115,25 +117,26 @@ public class Parkhaus {
 			
 	        int einfahrtszeit = einfahrtstunden * 60 + einfahrtminuten;
 	        int ausfahrtszeit = ausfahrtstunden * 60 + ausfahrtminuten;
-	        
+
 	        int parkdauer = (ausfahrtszeit - einfahrtszeit) - 60;
 	        
+	        //falls in der gebührenfreien zeit eingefahren wurde
 	        if (einfahrtstunden >= 6 && einfahrtstunden < 10) {
+	        	//falls die gebührenfreie zeit überschritten worden ist.
 	            if (ausfahrtstunden >= 10) {
+	            	//guck um wie viel die gebührenfreie zeit überschritten worden ist
+	            	parkdauer = parkdauer - (10 * 60) - einfahrtszeit;
 	            
-	            	parkdauer -= (10 * 60) - einfahrtszeit;
-
+	            //falls im bereich zwischen 6 und 10 geblieben worden ist,
+	            //ist die gebührenpflichtige parkdauer = 0
 	            } else {
 	                parkdauer = 0;
 	            }
 	        }
-
+	        //falls parkdauer größer 0 ist, gibt es parkdauer zurück,
+	        //wenn nicht dann die 0
 	        return Math.max(0, parkdauer);
-	           
-		} else {
-			return -1;
 		}
-	}
 		
 
 	public static int berechneParkgebuehr(int parkdauer) {
@@ -148,11 +151,16 @@ public class Parkhaus {
 	        return 0;
 	    }
 
-		int stündlichegebühr = 150; // 1.50 Euro in Cent
+		int stündlicheGebühr = 150; // 1.50 Euro in Cent
+		
+		//wenn parkdauer kleiner 0 ist, gibt es 0 zurück
+		//berechnet wie viele minuten man zahlen muss
+		int zuzahlendeMinuten = Math.max(parkdauer - 90, 0);
 
-		int zuzahlendeminuten = Math.max(parkdauer - 90, 0);
-
-		return Math.min(300 + (int)Math.ceil(zuzahlendeminuten / 60.0) * stündlichegebühr, 1000);
+		//Math.min erlaubt es in diesem fall, das wenn die berechnung größer 1000 ist, 1000 zurückzugeben 
+		//Math.ceil gibt die kleinste gerade Zahl zurück
+		//300 für die 90 min + stundenanzahl * stündliche gebü
+		return Math.min(300 + (int)Math.ceil(zuzahlendeMinuten / 60.0) * stündlicheGebühr, 1000);
 
 	}
 
