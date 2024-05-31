@@ -27,15 +27,12 @@ public class Main {
 
             switch (selection) {
             case 2:
-	            
+            	System.out.println("Gebe einen Datei Namen ein: ");
+				String filename = scanner.next();
 				try {
-					System.out.println("Gebe einen Datei Namen ein: ");
-					String filename = scanner.next();
 					String content = FileHandler.readFromFile(filename);
 					FileHandler.readFromFile(filename);
 		            System.out.println("Inhalt der Datei: " + content);
-		            scanner.close();
-		            
 		        } catch (FileNotFoundException e) {
 		            // Fehler abfangen und Fehlermeldung ausgeben
 		            System.err.println("Datei nicht gefunden!");
@@ -61,7 +58,7 @@ public class Main {
                 System.out.println();
 
                 System.out.println("Gebe einen Datei Namen ein: ");
-				String filename = scanner.next();
+				filename = scanner.next();
 				
 				//annahme wenn name vorhanden, tut es überscheiben, wenn nicht neue datei erstellen
 				FileHandler.writeToFile(filename, encryptedTextWithShiftPrefix);

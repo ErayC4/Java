@@ -33,6 +33,7 @@ public class Parkhaus {
 				int zahlungInCent = zahlungGueltig(zahlung);
 				int rueckgeld = zahlungInCent - (int)parkgebühren;
 				int[] rueckgeldArray = rueckgeld(rueckgeld);
+				
 				if (zahlungInCent != -1) {
 					if (zahlungInCent - parkgebühren >= 0) {
 						for (int i = 0; i < rueckgeldArray.length; i++) {
@@ -78,16 +79,16 @@ public class Parkhaus {
 	        int einfahrtminuten = Integer.parseInt(einfahrtszeitStücke[1]);
 	        int ausfahrtstunden = Integer.parseInt(ausfahrtszeitStücke[0]);
 	        int ausfahrtminuten = Integer.parseInt(ausfahrtszeitStücke[1]);
-        
-	        if (einfahrtstunden > ausfahrtstunden || (einfahrtstunden == ausfahrtstunden && einfahrtminuten >= ausfahrtminuten)) {
+	        //überprüft ob die Einfahrtszeit nach der Ausfahrtszeit liegt
+	        if (einfahrtstunden > ausfahrtstunden || (einfahrtstunden == ausfahrtstunden && einfahrtminuten > ausfahrtminuten)) {
 	        	return false;
 	        }
-	        
+	        //ob die einfahrt / ausfahrt 22uhr ist
 	        if (einfahrtstunden == 22 || ausfahrtstunden == 22) {
 	        	return (einfahrtstunden >= 6 && einfahrtstunden <= 22) && (einfahrtminuten < 60) && 
 	             	   (ausfahrtstunden >= 6 && ausfahrtstunden <= 22) && (ausfahrtminuten == 0);
 	        }
-        
+	        //ob die Einfahrtszeit nicht nach der Ausfahrtszeit liegt.
 	        return (einfahrtstunden >= 6 && einfahrtstunden < 22) && (einfahrtminuten >= 0 && einfahrtminuten < 60) && 
 	        	   (ausfahrtstunden >= 6 && ausfahrtstunden < 22) && (ausfahrtminuten >= 0 && ausfahrtminuten < 60);
         
@@ -208,7 +209,7 @@ public class Parkhaus {
 		// 1 Euro-Münzen, 50 Cent-Münzen, 20 Cent-Münzen, 10 Cent-Münzen].
 		int[] muenzen = {200, 100, 50, 20, 10};
 	    int[] rueckgeldarray = new int[muenzen.length];
-
+	    
 	    for (int i = 0; i < muenzen.length; i++) {
 	        rueckgeldarray[i] = rueckgeld / muenzen[i];
 	        rueckgeld %= muenzen[i];
