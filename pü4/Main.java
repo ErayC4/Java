@@ -35,7 +35,7 @@ public class Main {
 		            System.out.println("Inhalt der Datei: " + content);
 		        } catch (FileNotFoundException e) {
 		            // Fehler abfangen und Fehlermeldung ausgeben
-		            System.err.println("Datei nicht gefunden!");
+		            System.err.println("File not found");
 		        }
 		        
 				
@@ -48,16 +48,16 @@ public class Main {
                 shift = scanner.nextInt();
 
                 scanner.nextLine(); // Entfernt den übriggebliebenen Zeilenumbruch nach der Zahleneingabe
-
+//
                 encryptedText = Crypto.caesarEncrypt(text, shift); // Verschlüsselt den eingegebenen Text
 
                 // Anpassung des Shift-Wertes, falls nötig, und Vorbereitung des verschlüsselten Texts für die Dateiausgabe
                 String encryptedTextWithShiftPrefix = Crypto.normalizeShiftValueAndSetShiftAsPrefix(shift, encryptedText);
 
-                System.out.println("Encrypted text: " + encryptedTextWithShiftPrefix);
+                System.out.println("Encrypted text: \n" + encryptedTextWithShiftPrefix);
                 System.out.println();
 
-                System.out.println("Gebe einen Datei Namen ein: ");
+                System.out.print("Enter file name: ");
 				filename = scanner.next();
 				
 				//annahme wenn name vorhanden, tut es überscheiben, wenn nicht neue datei erstellen
@@ -65,7 +65,7 @@ public class Main {
 				String content = FileHandler.readFromFile(filename);
 
 				FileHandler.readFromFile(filename);
-	            System.out.println("Inhalt der Datei: " + content);
+	            System.out.println("Encrypted text read from file: " + content);
 
                 break;
 
@@ -76,7 +76,7 @@ public class Main {
 
             default:
                 // Behandlung ungültiger Auswahl
-                System.out.println("Ungültige Auswahl, bitte versuchen Sie es erneut.");
+                System.out.println("Invalid selection, try again.");
                 break;
             }
         }

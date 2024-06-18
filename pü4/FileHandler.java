@@ -20,17 +20,20 @@ public class FileHandler {
     // Methode zum Lesen eines Textes aus einer Datei
     public static String readFromFile(String filename) throws IOException {
         // Öffnet einen BufferedReader, um aus der Datei zu lesen, deren Pfad aus dem Standardpfad und dem Dateinamen besteht
+    	// ### wie funktioniert buffered reader
         BufferedReader reader = new BufferedReader(new FileReader(defaultFilePath + filename));
         
         // Erstellt einen StringBuilder, um den Inhalt der Datei zu speichern
         StringBuilder fileContent = new StringBuilder();
         
         // Deklariert eine String-Variable für die Zeilen, die aus der Datei gelesen werden
+        // ### Warum muss man currentline vordeklarieren?
         String currentLine;
         
         // Liest Zeile für Zeile aus der Datei, bis das Ende der Datei erreicht ist (null)
         while ((currentLine = reader.readLine()) != null) {
             // Fügt die gelesene Zeile und einen Zeilenumbruch dem StringBuilder hinzu
+        	// ### übersetze diesen satz
 			fileContent.append(currentLine).append("\n");
         }
         
